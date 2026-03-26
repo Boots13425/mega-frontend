@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// Base API URL
-// - In production (served by Django), `/api` is same-origin.
-// - In development (Vite), `/api` is proxied to Django by vite.config.js.
-const API_BASE_URL = `/api`;
+// API base:
+// - Default: `/api` (works with Vite dev proxy and same-origin deployments)
+// - Production (Vercel): set `VITE_API_BASE_URL` to your Render backend, e.g. `https://your-render.com/api`
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `/api`; 
 
 // Admin token for import/template endpoints (set after login on Admin page)
 let adminToken = typeof window !== 'undefined' ? window.localStorage.getItem('megaglow_admin_token') : null;

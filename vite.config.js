@@ -13,7 +13,7 @@ export default defineConfig({
     // Proxy API calls to the Django backend (avoids needing port 8000 open on LAN)
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://mega-backend-5pw9.onrender.com',
         changeOrigin: true,
       },
     },
