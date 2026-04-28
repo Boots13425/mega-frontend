@@ -32,13 +32,16 @@ function Dashboard() {
         reportingAPI.getDeadStock(),
       ]);
       
-      setSummary(summaryRes.data);
-      setTopProducts(topRes.data);
-      setDeadStock(deadRes.data);
+      setSummary(summaryRes.data || {});
+      setTopProducts(Array.isArray(topRes.data) ? topRes.data : []);
+      setDeadStock(Array.isArray(deadRes.data) ? deadRes.data : []);
       setError(null);
     } catch (err) {
-      setError('Failed to load dashboard data. Please try again.');
-      console.error(err);
+      console.error('Dashboard API error:', err);
+      setSummary({});
+      setTopProducts([]);
+      setDeadStock([]);
+      setError('Failed to load dashboard data. Backend might be starting up. Please refresh in a moment.');
     } finally {
       setLoading(false);
     }

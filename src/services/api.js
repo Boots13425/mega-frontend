@@ -37,8 +37,20 @@ api.interceptors.request.use((config) => {
   if (adminToken) {
     config.headers.Authorization = `Token ${adminToken}`;
   }
+  console.log('API Request:', config.baseURL + config.url);
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => {
+    console.log('API Response OK:', response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.config?.url, error.message, error.response?.status);
+    return Promise.reject(error);
+  }
+);
 
 // Products API
 export const productsAPI = {
