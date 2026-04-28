@@ -3,7 +3,10 @@ import axios from 'axios';
 // API base:
 // - Default: `/api` (works with Vite dev proxy and same-origin deployments)
 // - Production (Vercel): set `VITE_API_BASE_URL` to your Render backend, e.g. `https://your-render.com/api`
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `/api`; 
+const PROD_FALLBACK_API_URL = 'https://mega-backend-5pw9.onrender.com/api';
+const isBrowser = typeof window !== 'undefined';
+const isVercelHost = isBrowser && window.location.hostname.endsWith('vercel.app');
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (isVercelHost ? PROD_FALLBACK_API_URL : `/api`);
 
 // Admin token for import/template endpoints (set after login on Admin page)
 let adminToken = typeof window !== 'undefined' ? window.localStorage.getItem('megaglow_admin_token') : null;
