@@ -54,11 +54,13 @@ function Sales() {
     try {
       setLoading(true);
       const response = await salesAPI.getAll();
-      setSales(response.data.results || response.data);
+      const salesList = response.data.results || response.data || [];
+      setSales(Array.isArray(salesList) ? salesList : []);
       setError(null);
     } catch (err) {
       setError('Failed to load sales. Please try again.');
-      console.error(err);
+      console.error('Sales API error:', err);
+      setSales([]);
     } finally {
       setLoading(false);
     }

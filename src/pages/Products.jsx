@@ -25,11 +25,13 @@ function Products() {
       if (lowStockFilter) params.low_stock = 'true';
       
       const response = await productsAPI.getAll(params);
-      setProducts(response.data.results || response.data);
+      const productsList = response.data.results || response.data || [];
+      setProducts(Array.isArray(productsList) ? productsList : []);
       setError(null);
     } catch (err) {
       setError('Failed to load products. Please try again.');
-      console.error(err);
+      console.error('Products API error:', err);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -38,9 +40,11 @@ function Products() {
   const loadCategories = async () => {
     try {
       const response = await productsAPI.getCategories();
-      setCategories(response.data);
+      const categoriesList = response.data || [];
+      setCategories(Array.isArray(categoriesList) ? categoriesList : []);
     } catch (err) {
-      console.error(err);
+      console.error('Categories API error:', err);
+      setCategories([]);
     }
   };
 

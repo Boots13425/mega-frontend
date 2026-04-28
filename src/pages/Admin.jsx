@@ -155,11 +155,14 @@ function Admin() {
         reportingAPI.getDashboardSummary(),
         reportingAPI.getMonthlyTrend(),
       ]);
-      setSummary(summaryRes.data);
-      setMonthlyTrend(trendRes.data);
+      setSummary(summaryRes.data || {});
+      const trendList = trendRes.data || [];
+      setMonthlyTrend(Array.isArray(trendList) ? trendList : []);
     } catch (err) {
       // Keep admin page usable even if analytics fail
-      console.error(err);
+      console.error('Analytics API error:', err);
+      setSummary({});
+      setMonthlyTrend([]);
     } finally {
       setLoadingAnalytics(false);
     }
@@ -190,11 +193,13 @@ function Admin() {
       if (categoryFilter) params.category = categoryFilter;
       if (lowStockFilter) params.low_stock = 'true';
       const response = await productsAPI.getAll(params);
-      setProducts(response.data.results || response.data || []);
+      const productsList = response.data.results || response.data || [];
+      setProducts(Array.isArray(productsList) ? productsList : []);
       setProductsError(null);
     } catch (err) {
       setProductsError('Failed to load products. Please try again.');
-      console.error(err);
+      console.error('Products API error:', err);
+      setProducts([]);
     } finally {
       setLoadingProducts(false);
     }
@@ -203,9 +208,11 @@ function Admin() {
   const loadCategories = async () => {
     try {
       const response = await productsAPI.getCategories();
-      setCategories(response.data || []);
+      const categoriesList = response.data || [];
+      setCategories(Array.isArray(categoriesList) ? categoriesList : []);
     } catch (err) {
-      console.error(err);
+      console.error('Categories API error:', err);
+      setCategories([]);
     }
   };
 
@@ -306,11 +313,13 @@ function Admin() {
     setLoadingSales(true);
     try {
       const response = await salesAPI.getAll();
-      setSales(response.data.results || response.data || []);
+      const salesList = response.data.results || response.data || [];
+      setSales(Array.isArray(salesList) ? salesList : []);
       setSalesError(null);
     } catch (err) {
       setSalesError('Failed to load sales. Please try again.');
-      console.error(err);
+      console.error('Sales API error:', err);
+      setSales([]);
     } finally {
       setLoadingSales(false);
     }
