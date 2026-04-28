@@ -36,6 +36,14 @@ const api = axios.create({
   },
 });
 
+// Use a clean client for login so stale auth headers never affect sign-in.
+const authClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 api.interceptors.request.use((config) => {
   if (adminToken) {
     config.headers.Authorization = `Token ${adminToken}`;
@@ -81,7 +89,7 @@ export const productsAPI = {
 // Auth API (admin login)
 export const authAPI = {
   login: (username, password) =>
-    api.post('/auth/login/', { username, password }),
+    authClient.post('/auth/login/', { username, password }),
 };
 
 // Sales API
